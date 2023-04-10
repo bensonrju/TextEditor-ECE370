@@ -53,6 +53,7 @@ class jbLinkedList
         return itr;
     }
 
+    // Inserts a character at the front of the list
     void Insert(char value) {
         Node* newNode = new Node(value);
 
@@ -60,13 +61,14 @@ class jbLinkedList
             this->head = newNode;
             this->tail = newNode;
         } else {
-            Node* firstNode = this->head;
             newNode->setNext(this->head);
             this->head->setPrev(newNode);
             this->head = newNode;
         }
     }
 
+
+    // Inserts a character at the end of the list
     void Append(char value) {
         Node* newNode = new Node(value);
         
@@ -81,6 +83,7 @@ class jbLinkedList
         }
     }
 
+    // Deletes the first element in the list
     void DeleteFirst() {
         if (this->isEmpty()) { return; }
 
@@ -98,6 +101,8 @@ class jbLinkedList
         this->head->setPrev(nullptr);
     }
 
+
+    // Deletes the last element in the list
     void DeleteLast() {        
         if (this->isEmpty()) { return; }
 
@@ -121,32 +126,42 @@ class jbLinkedList
     // Deletes the character that is 
     // the given number of nodes from the tail of the list
     bool DeleteNegAt(int negIdx) {
-        if (this->isEmpty()) { return false; }
+        // contingency for if the list is empty
+        if (this->isEmpty()) { return false; } 
 
+        // if the index is zero, that means that the last character
+        // is to be deleted and tail needs to be reallocated
+        // this->DeleteLast() handles the reallocation of the tail pointer
         if (negIdx == 0) {
             this->DeleteLast();
             return true;
         }
 
         Node* itr = this->tail;
-
+        
+        // Traverses the list until it reaches the specified index
+        // or the iterator reaches the front of the list
         while (itr != nullptr && negIdx > 0) {
-            cout << "Negative IDX: " << negIdx 
-                 << " Character: " << itr->getData() << endl;
             itr = itr->getPrev();
             negIdx--;
         }
 
+        // If the iterator points to null, it means
+        // it went to far forward meaning it failed to
+        // find a place to insert; thus we exit with a fail
         if (itr == nullptr) { return false; }
 
+        // If the iterator points to the head, 
+        // the head pointer needs to be reallocated before 
+        // current head gets deleted
         if (itr == this->head) {
             this->DeleteFirst();
             return true;
         }
 
+        // If the index didn't point to the ends of the list, 
+        // then delete the node that the iterator points to
         if (negIdx == 0) {
-            cout << endl << "Deleting Character: " 
-                 << itr->getData() << endl;
             Node* newPrev = itr->getPrev();
             Node* newNext = itr->getNext();
 
@@ -155,42 +170,50 @@ class jbLinkedList
 
             return true;
 
-        } else {
-            cout << " ERROR: INDEX OUT OF RANGE" << endl;
-        }
+        } 
+        // If this is reached then there was a contingency that 
+        // was not properly handled and we should
+        // inform the user of the bug
+        else { cout << " ERROR: INDEX OUT OF RANGE" << endl; }
 
         return false;
     }
 
+    // Inserts a character after a given node
+    // The given node is specified by negIdx
+    // Idx dictates how many nodes to go back before insertion
+    // Returns true if character was successfully inserted
     bool InsertNegAt(char value, int negIdx) {
+
+        // Contingency check for if the list is empty
         if (this->isEmpty() || negIdx == 0) {
             this->Append(value);
             return true;
         }
 
-        Node* itr = this->tail;
-        Node* newNode = new Node(value);
+        Node* itr = this->tail;             // iterator traverses the list
+        Node* newNode = new Node(value);    // node to be inserted
 
+
+        // Traverses the list until it reaches the specified index
+        // or the iterator reaches the front of the list
         while (itr != this->head && negIdx > 0) {
-            cout << "Negative IDX: " << negIdx << endl;
             itr = itr->getPrev();
             negIdx--;
         }
 
+        // If the index points to the front of the list, 
+        // insert needs to be called to handle the 
+        // reallocation of the this->head pointer
         if (itr == this->head) {
             this->Insert(value);
             return true;
         }
 
+        // If the index reached zero before the iterator reached the front
+        // of the list, then insert it after where the iterator stopped
         if (negIdx == 0) {
-            cout << endl << "Inserting Character..." << endl;
-            if (itr == this->head) {
-                this->head->setPrev(newNode);
-                this->head = this->head->getPrev();
-                return true;
-            }
-
-            Node* newPrev = itr;
+            Node* newPrev = itr;        
             Node* newNext = itr->getNext();
 
             newPrev->setNext(newNode);
@@ -200,17 +223,15 @@ class jbLinkedList
             newNode->setNext(newNext);
 
             return true;
-            
-            /*
-            if (newPrev != nullptr) { newPrev->setNext(newNext); }
-            if (newNext != nullptr) { newNext->setPrev(newPrev); }
-            */
-        } else {
-            cout << " ERROR: INDEX OUT OF RANGE" << endl;
-        }
+        } 
+        // If this is reached then there was a contingency that 
+        // was not properly handled and we should
+        // inform the user of the bug
+        else { cout << " ERROR: INDEX OUT OF RANGE" << endl;}
         return false;
     }
 
+    // Returns the elements in-order as a string
     string getString() {
         if (this->isEmpty()) { return ""; }
 
