@@ -194,7 +194,6 @@ class jbLinkedList
         Node* itr = this->tail;             // iterator traverses the list
         Node* newNode = new Node(value);    // node to be inserted
 
-
         // Traverses the list until it reaches the specified index
         // or the iterator reaches the front of the list
         while (itr != this->head && negIdx > 0) {
@@ -205,7 +204,7 @@ class jbLinkedList
         // If the index points to the front of the list, 
         // insert needs to be called to handle the 
         // reallocation of the this->head pointer
-        if (itr == this->head) {
+        if (itr == this->head && negIdx == 1) {
             this->Insert(value);
             return true;
         }

@@ -38,6 +38,7 @@ void ofApp::draw(){
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
     if (validChar(key)) {
+        
         if (this->text.InsertNegAt(static_cast<char>(key), cursorOffset)) {
             cursorOffset = clampValue(cursorOffset, 0, this->text.getString().length());
         }
@@ -49,9 +50,5 @@ void ofApp::keyPressed(int key){
         cursorOffset = clampValue(cursorOffset+1, 0, this->text.getString().length());
     } else if (key == 57358) {
         cursorOffset = clampValue(cursorOffset-1, 0, this->text.getString().length());
-    }
-    
-    else {
-        cout << " INVALID CHARACTER";
     }
 }
